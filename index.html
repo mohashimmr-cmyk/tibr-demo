@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تِبر إدارة الذهب | by DQ</title>
+<meta name="description" content="تِبر — منصة إدارة الذهب. ديمو تفاعلي من دي كيو DOC IQ.">
+<meta property="og:title" content="تِبر إدارة الذهب | by DQ">
+<meta property="og:description" content="ديمو تفاعلي كامل لمنصة تِبر لإدارة ورقابة سلسلة الذهب — من دي كيو DOC IQ">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23f28c28%27/%3E%3Ctext x=%2732%27 y=%2744%27 font-size=%2736%27 text-anchor=%27middle%27 fill=%27%23111%27 font-family=%27Arial%27 font-weight=%27700%27%3E%D8%AA%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: operations app — login gate, then sidebar (desktop) / top rail (phone) + one working view; dark single theme */
+:root{
+  --bg:#0e0e10; --panel:#18181b; --panel2:#202024; --line:#2c2c31; --fg:#f2f2f3; --muted:#a1a1a9;
+  --or:#f28c28; --or-soft:#3a2410; --ok:#41c389; --ok-soft:#12301f; --warn:#f2b33d; --warn-soft:#3a2d0e; --bad:#ef5b52; --bad-soft:#3d1513; --info:#6aa8ff; --info-soft:#15243d;
+  --f-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.6;direction:rtl}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+h1,h2{font-family:var(--f-display);margin:0;text-wrap:balance}
+h2{font-size:22px}
+h3{font-size:15px;margin:0 0 10px;font-weight:600}
+.muted{color:var(--muted)} .small{font-size:12px}
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding-block:32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.login .box{width:100%;max-width:760px;display:grid;gap:20px}
+.logo{display:flex;align-items:center;gap:12px}
+.mark{width:46px;height:46px;border-radius:12px;background:var(--or);color:#111;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:24px}
+.logo h1{font-size:30px}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.role{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:right;cursor:pointer;display:grid;gap:4px}
+.role:hover{border-color:var(--or)}
+.role b{font-size:16px} .role span{font-size:13px;color:var(--muted)}
+/* shell */
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:var(--panel);border-left:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;overflow:auto}
+aside .logo{padding:4px 6px 12px}
+aside .logo h1{font-size:20px} aside .mark{width:34px;height:34px;font-size:18px;border-radius:9px}
+.nav{display:grid;gap:2px}
+.nav button{background:none;border:0;text-align:right;padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.nav button:hover{background:var(--panel2);color:var(--fg)}
+.nav button[aria-current="page"]{background:var(--or-soft);color:var(--or);font-weight:600}
+.badge{font-family:var(--f-num);font-size:11px;background:var(--bad);color:#fff;border-radius:999px;padding:0 7px}
+.who{margin-top:auto;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:6px;font-size:13px}
+.main{min-width:0}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.topbar .t{font-family:var(--f-display);font-size:17px}
+.mnav{display:none}
+.content{padding-block:18px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px;max-width:1180px}
+.lead{color:var(--muted);margin:2px 0 0;max-width:70ch}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cols{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.kpi span{font-size:12px;color:var(--muted)}
+.kpi b{display:block;font-family:var(--f-num);font-size:22px;margin-top:2px;font-variant-numeric:tabular-nums}
+.kpi em{font-style:normal;font-size:12px;color:var(--muted)}
+.kpi.hl{border-color:var(--or);background:linear-gradient(180deg,var(--or-soft),var(--panel))}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.ph h3{margin:0}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.ok{background:var(--ok-soft);color:var(--ok)} .warn{background:var(--warn-soft);color:var(--warn)} .bad{background:var(--bad-soft);color:var(--bad)} .or{background:var(--or-soft);color:var(--or)} .info{background:var(--info-soft);color:var(--info)} .gray{background:var(--panel2);color:var(--muted)}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+th{font-weight:500;color:var(--muted);font-size:12px;text-align:right;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--panel2)}
+tr.sel td{background:var(--or-soft)}
+form{display:grid;gap:12px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+input[type=range]{padding:0;accent-color:var(--or)}
+.btn{font-weight:600;border:0;border-radius:8px;padding:8px 14px;background:var(--or);color:#111;cursor:pointer;white-space:nowrap}
+.btn.ghost{background:var(--panel2);color:var(--fg);border:1px solid var(--line)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn.danger{background:var(--bad);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.res div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+.res span{font-size:12px;color:var(--muted)}
+.res b{display:block;font-family:var(--f-num);font-size:18px}
+.verdict{border-radius:8px;padding:12px;font-size:14px}
+.feed{display:grid;gap:10px}
+.alert{display:grid;grid-template-columns:4px 1fr auto;gap:10px;font-size:14px;align-items:start}
+.alert::before{content:"";border-radius:2px;background:var(--warn);align-self:stretch}
+.alert.a-bad::before{background:var(--bad)} .alert.a-ok::before{background:var(--ok)} .alert.a-info::before{background:var(--info)}
+.alert small{display:block;color:var(--muted)}
+.why{display:block;margin-top:2px;font-size:12px;color:var(--or)}
+.bars{display:grid;gap:10px}
+.srow{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;align-items:center;font-size:13px}
+.track{height:10px;background:var(--panel2);border-radius:6px;overflow:hidden;position:relative}
+.track i{position:absolute;inset:0 0 0 auto;border-radius:6px;background:var(--or)}
+.track i.g{background:#6b6b73}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.chain span{background:var(--panel2);border:1px solid var(--line);padding:5px 10px;border-radius:8px}
+.chain span.on{border-color:var(--ok);color:var(--ok)} .chain span.cur{border-color:var(--or);color:var(--or)}
+.chain i{color:var(--muted);font-style:normal}
+.mapbox{background:#141417;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-left:6px;vertical-align:middle}
+.receipt{background:#f4efe4;color:#2a2620;border-radius:6px;padding:16px;transform:rotate(-1deg);box-shadow:0 6px 20px rgba(0,0,0,.4);max-width:340px;width:100%;justify-self:center}
+.receipt h4{margin:0 0 6px;font-size:15px;text-align:center}
+.receipt .hw{font-family:"Readex Pro",var(--f-body);color:#1d3c8a}
+.receipt div{display:flex;justify-content:space-between;border-bottom:1px dashed #b9b0a0;padding:5px 0;font-size:13px}
+.upimg{max-width:340px;width:100%;border-radius:8px;justify-self:center}
+.ext{display:grid;gap:8px}
+.ext .f{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px}
+.ext .f.low{border-color:var(--warn)}
+.ext .f input{padding:4px 8px}
+.phone{max-width:420px;width:100%;justify-self:center;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:14px;display:grid;gap:12px}
+.task{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:6px}
+.sync{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 10px;border-radius:8px}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--or);color:#111;font-weight:600;padding:10px 18px;border-radius:999px;font-size:14px;z-index:30;max-width:calc(100% - 32px);text-align:center}
+.modalbg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:25;display:grid;place-items:center;padding:16px}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;max-width:520px;width:100%;display:grid;gap:12px;max-height:90vh;overflow:auto}
+.empty{color:var(--muted);font-size:14px;padding:12px;text-align:center;border:1px dashed var(--line);border-radius:8px}
+pre.csv{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-family:var(--f-num);font-size:12px;overflow:auto;max-height:200px;direction:ltr;text-align:left;margin:0}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  aside{display:none}
+  .mnav{display:flex;gap:4px;overflow-x:auto;width:100%;scrollbar-width:none;order:3}
+  .mnav button{background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;white-space:nowrap;color:var(--muted);cursor:pointer;font-size:13px}
+  .mnav button[aria-current="page"]{background:var(--or);color:#111;border-color:var(--or);font-weight:600}
+  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3,.cols,.cols2{grid-template-columns:1fr}
+  .srow{grid-template-columns:80px 1fr 80px}
+}
+@media (prefers-reduced-motion:no-preference){.pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{50%{opacity:.3}}}
+.dqby{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--muted);direction:ltr;justify-content:center;flex-wrap:wrap}.dqby b{color:var(--fg)}.dqby i{font-style:normal;color:var(--or);font-family:var(--f-display)}
+</style>
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div class="toast" id="toast" hidden></div>
+<div id="modalRoot"></div>
+
+<script>
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const f=(n,d=1)=>Number(n||0).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+const now=()=>new Date().toLocaleString('en-GB',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.k);toast.k=setTimeout(()=>e.hidden=true,2800)}
+const RATE=0.22, CY_PER_T=1.5, VAT_GRADE=20, VAT_REC=0.6;
+const STATES=["نهر النيل","الشمالية","البحر الأحمر","القضارف","كسلا"];
+const ROLES={
+ admin:{n:"إدارة الشركة السودانية",d:"لوحة قيادة وطنية، الحالات، التقارير وكل الوحدات",u:"م. سارة عبدالله"},
+ inspector:{n:"مراقب ميداني",d:"تطبيق الجوال: مهام، تسجيل، شهادة الصهر، المستندات",u:"أ. خالد عمر · نهر النيل"},
+ company:{n:"شركة منتجة",d:"رفع الإنتاج الشهري ومتابعة الامتثال والحصة",u:"شركة الصحراء الشرقية للتعدين"},
+ market:{n:"سوق ذهب مرخّص",d:"تسجيل البيع وإصدار الإيصالات والتحقق من التراخيص",u:"سوق العبيدية"},
+ bank:{n:"البنك المركزي",d:"استلام الشحنات ومطابقة الذهب المستلم",u:"إدارة الذهب · بورتسودان"}
+};
+const NAV={
+ admin:[["dash","لوحة القيادة"],["cases","الحالات والتنبيهات"],["plants","مصانع الشركات"],["goldroom","غرف الصهر والسبائك"],["karta","الكرتة"],["artisanal","الأحواض والأسواق"],["registry","السجل الوطني"],["permits","الترحيل"],["sat","الرصد الفضائي"],["docs","ذكاء المستندات"],["reports","التقارير"],["audit","سجل التدقيق"]],
+ inspector:[["field","تطبيق المراقب"],["goldroom","شهادة الصهر"],["docs","مسح مستند"],["registry","تسجيل في السجل"]],
+ company:[["mycompany","مصنعي"],["goldroom","سبائكي"]],
+ market:[["market","البيع والإيصالات"],["docs","مسح إيصال ورقي"]],
+ bank:[["bank","الشحنات الواردة"],["reports","المطابقة"]]
+};
+
+/* ================= seed data ================= */
+function seed(){return{
+ plants:[
+  {id:"P1",n:"مصنع الصحراء الشرقية",co:"شركة الصحراء الشرقية للتعدين",st:"البحر الأحمر",m:"CIL",t:52000,g:3.1,r:90,d:142,c:78,sub:true},
+  {id:"P2",n:"مصنع وادي النيل",co:"شركة وادي النيل للمعادن",st:"نهر النيل",m:"الرشح بالكومة",t:68000,g:1.8,r:70,d:63,c:61,sub:true},
+  {id:"P3",n:"مصنع جبل الحديد",co:"شركة جبل الحديد",st:"الشمالية",m:"CIC",t:30000,g:2.6,r:85,d:65.5,c:44,sub:true},
+  {id:"P4",n:"مصنع البحر الأحمر",co:"شركة البحر الأحمر للموارد",st:"البحر الأحمر",m:"التعويم ثم CIL",t:24000,g:3.4,r:86,d:61,c:33,sub:true},
+  {id:"P5",n:"مصنع أبو حمد",co:"شركة أبو حمد للتعدين",st:"نهر النيل",m:"الفصل بالجاذبية",t:9000,g:4.2,r:50,d:18.5,c:0,sub:true},
+  {id:"P6",n:"مصنع الشهيناب للكرتة",co:"شركة النيل لمعالجة المخلفات",st:"نهر النيل",m:"كرتة · CIL",t:14000,g:1.9,r:80,d:20.8,c:22,sub:true,karta:true}
+ ],
+ bars:[
+  {sn:"SD-P1-2610-001",pid:"P1",kg:24.1,pur:91.2,share:false,status:"مستلم في البنك",date:"2026-10-06"},
+  {sn:"SD-P1-2610-001S",pid:"P1",kg:6.8,pur:91.2,share:true,status:"مستلم في البنك",date:"2026-10-06"},
+  {sn:"SD-P3-2610-004",pid:"P3",kg:18.3,pur:89.5,share:false,status:"مُرحَّل",date:"2026-10-12"},
+  {sn:"SD-P3-2610-004S",pid:"P3",kg:5.2,pur:89.5,share:true,status:"مُرحَّل",date:"2026-10-12"},
+  {sn:"SD-P2-2610-002",pid:"P2",kg:12.0,pur:88.0,share:false,status:"في المصنع",date:"2026-10-18"},
+  {sn:"SD-P2-2610-002S",pid:"P2",kg:3.4,pur:88.0,share:true,status:"في المصنع",date:"2026-10-18"}
+ ],
+ karta:[
+  {id:"KR-1031",src:"أحواض الشهيناب",lic:"ART-NR-0912",t:120,g:1.9,hg:"منخفض",to:"P6",v:null},
+  {id:"KR-1032",src:"موقع غير مسجّل · جنوب أبو حمد",lic:"",t:95,g:2.2,hg:"منخفض",to:"P6",v:null},
+  {id:"KR-1033",src:"أحواض جبيت",lic:"ART-RS-0907",t:80,g:7.8,hg:"مرتفع",to:"P6",v:null},
+  {id:"KR-1034",src:"أحواض تعاونية أبو حمد",lic:"ART-SH-0911",t:150,g:1.6,hg:"منخفض",to:"P6",v:null}
+ ],
+ miners:[
+  {id:"ART-NR-0912",n:"عثمان الطيب",st:"نهر النيل",site:"V1",status:"ساري"},
+  {id:"ART-SH-0911",n:"تعاونية أبو حمد",st:"الشمالية",site:"V2",status:"ساري"},
+  {id:"ART-RS-0907",n:"مجموعة جبيت",st:"البحر الأحمر",site:"V3",status:"ساري"},
+  {id:"ART-NR-0915",n:"آدم إبراهيم",st:"نهر النيل",site:"V4",status:"ساري"},
+  {id:"ART-NR-0920",n:"الطيب محمد",st:"نهر النيل",site:"V1",status:"ساري"}
+ ],
+ vats:[
+  {id:"V1",n:"أحواض الشهيناب",st:"نهر النيل",fills:6,t:240,cy:360,sold:2950},
+  {id:"V2",n:"أحواض تعاونية أبو حمد",st:"الشمالية",fills:4,t:180,cy:270,sold:2080},
+  {id:"V3",n:"أحواض جبيت",st:"البحر الأحمر",fills:7,t:300,cy:450,sold:1410},
+  {id:"V4",n:"أحواض العبيدية الغربية",st:"نهر النيل",fills:3,t:120,cy:180,sold:1180}
+ ],
+ sites:[
+  {id:"S1",type:"أحواض",n:"أحواض الشهيناب",lic:true,x:120,y:110,p:0,risk:false},
+  {id:"S2",type:"طاحونة",n:"طاحونة أبو حمد 2",lic:true,x:210,y:250,p:0,risk:false},
+  {id:"S3",type:"كومة رشح",n:"كومة مصنع وادي النيل",lic:true,x:420,y:170,p:0,risk:false,note:"توسعت 18% منذ سبتمبر بينما الإنتاج المعلن ثابت"},
+  {id:"S4",type:"بئر",n:"بئر B-221",lic:true,x:470,y:300,p:0,risk:true,note:"عمق 46 م في تربة رملية · حادثتا انهيار قريبتان"},
+  {id:"S5",type:"أحواض",n:"موقع أحواض جديد (4 أحواض)",lic:false,x:160,y:60,p:1,risk:false},
+  {id:"S6",type:"أحواض",n:"موقع أحواض جديد (حوضان)",lic:false,x:90,y:160,p:1,risk:false},
+  {id:"S7",type:"آبار",n:"نحو 25 بئرًا جديدة",lic:false,x:330,y:90,p:1,risk:false}
+ ],
+ sales:[
+  {rc:"RC-4401",mid:"ART-NR-0912",vid:"V1",g:420,pur:88,buyer:"مؤسسة النيل للذهب",date:"2026-10-14",fee:true},
+  {rc:"RC-4402",mid:"ART-SH-0911",vid:"V2",g:310,pur:86,buyer:"مؤسسة النيل للذهب",date:"2026-10-15",fee:true},
+  {rc:"RC-4403",mid:"ART-RS-0907",vid:"V3",g:180,pur:85,buyer:"دار الشرق للذهب",date:"2026-10-16",fee:true}
+ ],
+ permits:[
+  {id:"TP-7701",what:"سبائك SD-P3-2610-004 + حصة الدولة",from:"مصنع جبل الحديد",to:"البنك المركزي · بورتسودان",kg:23.5,status:"في الطريق",bars:["SD-P3-2610-004","SD-P3-2610-004S"]},
+  {id:"TP-7700",what:"سبائك SD-P1-2610-001 + حصة الدولة",from:"مصنع الصحراء الشرقية",to:"البنك المركزي · بورتسودان",kg:30.9,status:"مستلم",bars:["SD-P1-2610-001","SD-P1-2610-001S"]},
+  {id:"TP-7702",what:"ذهب أهلي مجمّع · سوق العبيدية",from:"سوق العبيدية",to:"البنك المركزي · بورتسودان",kg:4.6,status:"في الطريق",bars:[]}
+ ],
+ cases:[],
+ log:[],
+ seq:{case:100,rc:4404,tp:7703,bar:10,lic:921,kr:1035},
+ offline:false, queue:[]
+}}
+let S; try{S=JSON.parse(localStorage.getItem('tibr-full'))}catch(e){}
+if(!S||!S.plants)S=seed();
+let ROLE=null, VIEW=null, SEL={plant:"P2"};
+try{ROLE=sessionStorage.getItem('tibr-role')}catch(e){}
+function save(){try{localStorage.setItem('tibr-full',JSON.stringify(S))}catch(e){}}
+function log(a){S.log.unshift({t:now(),r:ROLE?ROLES[ROLE].n:'-',a});S.log=S.log.slice(0,200);save()}
+
+/* ================= model ================= */
+const exp=p=>p.t*p.g*p.r/100/1000;
+function pstat(p){const e=exp(p),g=(e-p.d)/e;return g>.08?["bad","فرق مرتفع"]:g>.03?["warn","مراجعة"]:["ok","مطابق"]}
+const vExp=v=>Math.max(v.t,v.cy/CY_PER_T)*VAT_GRADE*VAT_REC;
+function vstat(v){const e=vExp(v),g=(e-v.sold)/e;return g>.35?["bad","بيع أقل بكثير"]:g>.15?["warn","مراجعة"]:["ok","متسق"]}
+function kflag(k){if(!k.lic)return"المصدر غير مرخّص";if(k.hg==="مرتفع"&&k.g>5)return"العيار أعلى بكثير من متوسط الموقع ونسبة زئبق مرتفعة";return""}
+function shareDue(){return S.plants.reduce((a,p)=>a+p.d*RATE,0)}
+function shareIn(){return S.bars.filter(b=>b.share&&b.status==="مستلم في البنك").reduce((a,b)=>a+b.kg,0)}
+function shareMade(){return S.bars.filter(b=>b.share).reduce((a,b)=>a+b.kg,0)}
+function artSold(){return S.vats.reduce((a,v)=>a+v.sold,0)/1000}
+function artExp(){return S.vats.reduce((a,v)=>a+vExp(v),0)/1000}
+function addCase(key,title,level,entity,reason,action){
+ if(S.cases.some(c=>c.key===key&&c.status!=="مغلقة"))return;
+ S.cases.unshift({id:"CS-"+(++S.seq.case),key,title,level,entity,reason,action,status:"مفتوحة",assignee:"",created:now(),notes:[]});
+}
+function scan(){ // AI engine: regenerate open cases from data
+ S.plants.forEach(p=>{const[k]=pstat(p);if(k!=="ok")addCase("plant-"+p.id,`${p.n}: المُعلن أقل من المتوقَّع بـ ${f((exp(p)-p.d)/exp(p)*100)}%`,k,p.n,p.c>0?"استهلاك السيانيد يتسق مع معالجة كامل الخام":"وزن المركّز عند البوابة أعلى من المُعلن",k==="bad"?"تفتيش ميداني خلال 72 ساعة وتعليق تصاريح الترحيل":"طلب تبرير من الشركة خلال 7 أيام")});
+ S.karta.forEach(k=>{const fl=kflag(k);if(fl&&k.v!=="مقبولة")addCase("karta-"+k.id,`شحنة كرتة ${k.id}: ${fl}`,"bad",k.src,"احتمال تمرير ذهب أهلي غير مسجّل عبر مصنع الكرتة","حجز الشحنة وزيارة المصدر")});
+ S.vats.forEach(v=>{const[k]=vstat(v);if(k!=="ok")addCase("vat-"+v.id,`${v.n}: المُباع أقل من المتوقَّع`,k,v.n,"كمية السيانيد المصروفة تشير لمعالجة أكبر مما بيع","زيارة الموقع ومراجعة سجل البيع")});
+ S.sites.forEach(s=>{if(!s.lic&&s.p===1&&!s.visited)addCase("site-"+s.id,`رصد فضائي: ${s.n} غير مرخّص`,"warn",s.n,"ظهر في صورة أكتوبر ولم يكن في صورة سبتمبر","إرسال فريق تسجيل ميداني");if(s.risk)addCase("risk-"+s.id,`خطر سلامة: ${s.n}`,"bad",s.n,s.note,"إيقاف العمل في البئر وتوعية المُعدِّنين")});
+ save();
+}
+const openCases=()=>S.cases.filter(c=>c.status!=="مغلقة");
+
+/* ================= render shell ================= */
+function render(){
+ if(!ROLE){renderLogin();return}
+ if(!VIEW||!NAV[ROLE].some(n=>n[0]===VIEW))VIEW=NAV[ROLE][0][0];
+ const items=NAV[ROLE];const oc=openCases().length;
+ const nav=items.map(([k,l])=>`<button data-go="${k}" ${k===VIEW?'aria-current="page"':''}><span>${l}</span>${k==="cases"&&oc?`<span class="badge">${oc}</span>`:''}${k==="field"&&myTasks().length?`<span class="badge">${myTasks().length}</span>`:''}</button>`).join('');
+ const title=items.find(n=>n[0]===VIEW)[1];
+ $('#app').innerHTML=`<div class="shell"><aside><div class="logo"><div class="mark">ت</div><div><h1>تِبر</h1><div class="small muted">إدارة الذهب</div></div></div><nav class="nav">${nav}</nav>
+  <div class="who"><div class="dqby" style="justify-content:flex-start">by <b>DQ</b> | <i>دي كيو</i></div><span class="muted">${ROLES[ROLE].n}</span><b>${ROLES[ROLE].u}</b><div class="row"><button class="btn ghost sm" data-act="logout">تبديل الدور</button><button class="btn ghost sm" data-act="reset">إعادة الضبط</button></div></div></aside>
+  <div class="main"><div class="topbar"><div class="row"><span class="t">${title}</span><span class="chip gray">${ROLES[ROLE].n}</span></div><div class="row"><span class="small muted">بيانات تجريبية · by <b style="color:var(--or)">DQ</b></span><button class="btn ghost sm mob" data-act="logout">تبديل الدور</button></div><nav class="mnav">${items.map(([k,l])=>`<button data-go="${k}" ${k===VIEW?'aria-current="page"':''}>${l}</button>`).join('')}</nav></div>
+  <div class="content" id="view">${VIEWS[VIEW]()}</div></div></div>`;
+ (BIND[VIEW]||(()=>{}))();
+}
+function renderLogin(){
+ $('#app').innerHTML=`<div class="login"><div class="box">
+  <div class="logo"><div class="mark">ت</div><div><h1>تِبر</h1><div class="muted">إدارة الذهب · نسخة تجريبية للتجربة</div></div></div>
+  <p class="lead" style="margin:0">اختر دورًا للدخول. كل دور يرى واجهته الخاصة، والبيانات مترابطة بين الأدوار: ما تسجّله كشركة أو مراقب أو سوق يظهر فورًا في لوحة الإدارة والبنك المركزي.</p>
+  <div class="roles">${Object.entries(ROLES).map(([k,r])=>`<button class="role" data-role="${k}"><b>${r.n}</b><span>${r.d}</span><span class="small">${r.u}</span></button>`).join('')}</div>
+  <p class="small muted" style="margin:0">كل الأسماء والأرقام افتراضية. تُحفظ تجربتك في هذا المتصفح فقط، ويمكنك إعادة ضبطها في أي وقت.</p>
+  <div class="dqby">Powered by <b>DOC IQ</b> | <i>دي كيو</i> · <span class="num">www.dq-iq.com</span></div>
+ </div></div>`;
+}
+
+/* ================= views ================= */
+const chipFor=s=>({"مستلم في البنك":"ok","مستلم":"ok","مُرحَّل":"info","في الطريق":"info","في المصنع":"warn","مفتوحة":"bad","قيد المعالجة":"warn","مغلقة":"ok","ساري":"ok","موقوف":"bad"}[s]||"gray");
+const lvl={bad:"مرتفع",warn:"متوسط",ok:"منخفض",info:"معلومة"};
+const VIEWS={};const BIND={};
+
+VIEWS.dash=()=>{
+ const due=shareDue(),inn=shareIn(),made=shareMade();
+ const pe=S.plants.reduce((a,p)=>a+exp(p),0),pd=S.plants.reduce((a,p)=>a+p.d,0);
+ const rows=[["الشركات",pd,pe],["الأهلي (عيّنة)",artSold(),artExp()]];const mx=Math.max(...rows.map(r=>Math.max(r[1],r[2])));
+ const byState=STATES.map(st=>[st,S.plants.filter(p=>p.st===st).reduce((a,p)=>a+p.d,0)+S.vats.filter(v=>v.st===st).reduce((a,v)=>a+v.sold/1000,0)]);const ms=Math.max(...byState.map(x=>x[1]),1);
+ const oc=openCases();
+ return `<div><h2>الموقف الوطني</h2><p class="lead">ملخص لحظي من كل نقاط التحكم. التنبيهات يولّدها محرك المطابقة تلقائيًا.</p></div>
+ <div class="grid4">
+  <div class="kpi"><span>إنتاج الشركات المُعلن</span><b>${f(pd)}</b><em>كجم · المتوقَّع ${f(pe)}</em></div>
+  <div class="kpi hl"><span>حصة الدولة 22% المستحقة</span><b>${f(due)}</b><em>كجم · مفصول ${f(made)} · مستلم ${f(inn)}</em></div>
+  <div class="kpi"><span>ذهب أهلي عبر الأسواق</span><b>${f(artSold())}</b><em>كجم · من ${f(artExp())} متوقَّع</em></div>
+  <div class="kpi"><span>حالات مفتوحة</span><b style="color:var(--bad)">${oc.length}</b><em>${oc.filter(c=>c.level==="bad").length} عالية الخطورة</em></div>
+ </div>
+ <div class="cols">
+  <div class="panel"><h3>المُسجّل مقابل المتوقَّع (كجم)</h3><div class="bars">${rows.map(([l,a,e])=>`<div class="srow"><span>${l}</span><div style="display:grid;gap:4px"><div class="track"><i style="width:${a/mx*100}%"></i></div><div class="track"><i class="g" style="width:${e/mx*100}%"></i></div></div><span class="num small">${f(a)} / ${f(e)}</span></div>`).join('')}</div>
+   <p class="small muted" style="margin:10px 0 14px">البرتقالي: مسجّل · الرمادي: متوقَّع من محرك التوازن الكتلي</p>
+   <h3>الإنتاج المسجّل حسب الولاية (كجم)</h3><div class="bars">${byState.map(([s,v])=>`<div class="srow"><span>${s}</span><div class="track"><i style="width:${v/ms*100}%"></i></div><span class="num small">${f(v)}</span></div>`).join('')}</div></div>
+  <div class="panel"><div class="ph"><h3>أحدث التنبيهات</h3><button class="btn ghost sm" data-go="cases">كل الحالات</button></div><div class="feed">${oc.slice(0,6).map(caseRow).join('')||'<div class="empty">لا حالات مفتوحة</div>'}</div></div>
+ </div>`;
+};
+function caseRow(c){return `<div class="alert a-${c.level}"><div><b>${esc(c.title)}</b><small>${c.id} · ${c.created} · ${c.status}${c.assignee?' · مُسنَدة إلى '+esc(c.assignee):''}</small><span class="why">السبب: ${esc(c.reason)}</span></div><button class="btn ghost sm" data-case="${c.id}">فتح</button></div>`}
+
+VIEWS.cases=()=>{
+ const fl=SEL.cf||"open";const list=S.cases.filter(c=>fl==="all"?true:fl==="open"?c.status!=="مغلقة":c.status==="مغلقة");
+ return `<div><h2>الحالات والتنبيهات</h2><p class="lead">كل تنبيه يصير حالة لها مسار: مفتوحة ← مُسنَدة لمراقب ← مغلقة بقرار. المراقب البشري هو من يقرر.</p></div>
+ <div class="row"><button class="btn ${fl==='open'?'':'ghost'} sm" data-cf="open">المفتوحة</button><button class="btn ${fl==='closed'?'':'ghost'} sm" data-cf="closed">المغلقة</button><button class="btn ${fl==='all'?'':'ghost'} sm" data-cf="all">الكل</button><button class="btn ghost sm" data-act="rescan">تشغيل محرك المطابقة</button></div>
+ <div class="panel"><div class="tbl"><table><thead><tr><th>الرقم</th><th>الحالة</th><th>الخطورة</th><th>الجهة</th><th>الإسناد</th><th>الوضع</th><th></th></tr></thead><tbody>
+ ${list.map(c=>`<tr><td class="num">${c.id}</td><td>${esc(c.title)}</td><td><span class="chip ${c.level}">${lvl[c.level]}</span></td><td>${esc(c.entity)}</td><td>${esc(c.assignee)||'—'}</td><td><span class="chip ${chipFor(c.status)}">${c.status}</span></td><td><button class="btn ghost sm" data-case="${c.id}">فتح</button></td></tr>`).join('')||`<tr><td colspan="7"><div class="empty">لا حالات</div></td></tr>`}
+ </tbody></table></div></div>`;
+};
+BIND.cases=()=>{document.querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{SEL.cf=b.dataset.cf;render()})};
+
+function openCase(id){
+ const c=S.cases.find(x=>x.id===id);if(!c)return;
+ modal(`<div class="ph"><h3>${c.id}</h3><span class="chip ${c.level}">خطورة ${lvl[c.level]}</span></div>
+ <b>${esc(c.title)}</b>
+ <div class="res"><div><span>الجهة</span><b style="font-family:var(--f-body);font-size:14px">${esc(c.entity)}</b></div><div><span>الوضع</span><b style="font-family:var(--f-body);font-size:14px">${c.status}</b></div></div>
+ <div class="verdict" style="background:var(--or-soft)"><b style="color:var(--or)">سبب التنبيه:</b> ${esc(c.reason)}<br><b style="color:var(--or)">الإجراء المقترح:</b> ${esc(c.action)}</div>
+ ${c.notes.length?`<div class="small muted">${c.notes.map(n=>'• '+esc(n)).join('<br>')}</div>`:''}
+ ${c.status!=="مغلقة"?`<form id="caseForm"><div class="fields">
+  ${ROLE==='admin'?`<label for="cAs">إسناد إلى<select id="cAs"><option value="">—</option><option ${c.assignee==='أ. خالد عمر'?'selected':''}>أ. خالد عمر</option><option ${c.assignee==='أ. منى حسن'?'selected':''}>أ. منى حسن</option><option ${c.assignee==='فريق التفتيش المركزي'?'selected':''}>فريق التفتيش المركزي</option></select></label>`:''}
+  <label for="cNote">ملاحظة / نتيجة<input id="cNote" placeholder="مثال: تمت الزيارة وتبيّن..."></label></div>
+  <div class="row">${ROLE==='admin'?'<button class="btn ghost" type="submit" data-k="assign">حفظ الإسناد</button>':''}<button class="btn" type="submit" data-k="close">إغلاق الحالة بقرار</button><button class="btn ghost" type="button" data-act="modalclose">رجوع</button></div></form>`:`<button class="btn ghost" data-act="modalclose">رجوع</button>`}`);
+ const fm=$('#caseForm');if(fm){let k='close';fm.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>k=b.dataset.k);
+  fm.onsubmit=e=>{e.preventDefault();const note=$('#cNote').value.trim();if(note)c.notes.push(now()+' — '+note);
+   if(k==='assign'){c.assignee=$('#cAs').value;c.status=c.assignee?"قيد المعالجة":"مفتوحة";log(`إسناد ${c.id} إلى ${c.assignee||'—'}`);toast('حُفظ الإسناد')}
+   else{c.status="مغلقة";c.closed=now();log(`إغلاق ${c.id}`);toast('أُغلقت الحالة '+c.id)}
+   save();closeModal();render()}}
+}
+
+VIEWS.plants=()=>{
+ const p=S.plants.find(x=>x.id===SEL.plant)||S.plants[0];
+ return `<div><h2>مصانع الشركات</h2><p class="lead">محرك التوازن الكتلي: المتوقَّع = الأطنان × العيار × نسبة الاستخلاص. اختر مصنعًا وجرّب تغيير القيم.</p></div>
+ <div class="panel"><div class="tbl"><table><thead><tr><th>المصنع</th><th>الولاية</th><th>الطريقة</th><th>المتوقَّع</th><th>المُعلن</th><th>الحصة 22%</th><th>الحالة</th></tr></thead><tbody>
+ ${S.plants.map(x=>{const[k,t]=pstat(x);return `<tr class="click ${x.id===p.id?'sel':''}" data-plant="${x.id}" tabindex="0"><td>${x.n}${x.karta?' <span class="chip gray">كرتة</span>':''}</td><td>${x.st}</td><td>${x.m}</td><td class="num">${f(exp(x))}</td><td class="num">${f(x.d)}</td><td class="num">${f(x.d*RATE)}</td><td><span class="chip ${k}">${t}</span></td></tr>`}).join('')}
+ </tbody></table></div></div>
+ ${mbPanel(p,true)}`;
+};
+function mbPanel(p,editable){
+ const e=exp(p),gap=e-p.d,[k,t]=pstat(p),bg={bad:"var(--bad-soft)",warn:"var(--warn-soft)",ok:"var(--ok-soft)"}[k],col={bad:"var(--bad)",warn:"var(--warn)",ok:"var(--ok)"}[k];
+ return `<div class="cols"><div class="panel"><h3>${p.n} · ${p.m}</h3>
+  <form id="mbForm"><div class="fields">
+   <label for="mbT">الخام المعالج (طن)<input id="mbT" type="number" step="100" value="${p.t}"></label>
+   <label for="mbG">العيار (غرام/طن)<input id="mbG" type="number" step="0.1" value="${p.g}"></label>
+   <label for="mbR">نسبة الاستخلاص %<input id="mbR" type="number" step="1" value="${p.r}"></label>
+   <label for="mbD">الذهب المُعلن (كجم)<input id="mbD" type="number" step="0.5" value="${p.d}"></label>
+   <label for="mbC">السيانيد (طن)<input id="mbC" type="number" step="1" value="${p.c}"></label>
+  </div><button class="btn" type="submit">${editable==='company'?'رفع الإنتاج الشهري':'احسب وطابق'}</button></form></div>
+  <div class="panel"><h3>حكم المنصة</h3><div class="res">
+   <div><span>المتوقَّع</span><b>${f(e)} كجم</b></div><div><span>المُعلن</span><b>${f(p.d)} كجم</b></div>
+   <div><span>الفرق</span><b style="color:${gap>0?'var(--bad)':'var(--ok)'}">${f(gap)} كجم</b></div><div><span>الحصة الضائعة المحتملة</span><b>${f(Math.max(gap,0)*RATE)} كجم</b></div>
+  </div><div class="verdict" style="background:${bg};margin-top:10px"><b style="color:${col}">${t}</b> — ${k==="ok"?"الإنتاج المُعلن يتسق مع الخام والعيار وطريقة المعالجة.":k==="warn"?"فرق متوسط. تُفتح حالة مراجعة ويُطلب تبرير.":"فرق مرتفع. تُفتح حالة تفتيش عالية الخطورة."}</div></div></div>`;
+}
+function bindMB(id,after){const fm=$('#mbForm');if(!fm)return;fm.onsubmit=e=>{e.preventDefault();const p=S.plants.find(x=>x.id===id);p.t=+$('#mbT').value||0;p.g=+$('#mbG').value||0;p.r=+$('#mbR').value||0;p.d=+$('#mbD').value||0;p.c=+$('#mbC').value||0;log(`تحديث إنتاج ${p.n}: ${f(p.d)} كجم`);scan();toast(after||'أُعيدت المطابقة');render()}}
+BIND.plants=()=>{document.querySelectorAll('[data-plant]').forEach(tr=>{const go=()=>{SEL.plant=tr.dataset.plant;render()};tr.onclick=go;tr.onkeydown=e=>{if(e.key==='Enter')go()}});bindMB(SEL.plant)};
+
+VIEWS.mycompany=()=>{const p=S.plants.find(x=>x.id==="P1");const bars=S.bars.filter(b=>b.pid===p.id);
+ const made=bars.filter(b=>b.share).reduce((a,b)=>a+b.kg,0),due=p.d*RATE;
+ const cs=S.cases.filter(c=>c.key==="plant-"+p.id&&c.status!=="مغلقة");
+ return `<div><h2>${p.co}</h2><p class="lead">${p.n} · ${p.st} · ${p.m}. ارفع إنتاج الشهر، وستطابقه المنصة فورًا مع الخام والعيار.</p></div>
+ <div class="grid4"><div class="kpi"><span>المُعلن هذا الشهر</span><b>${f(p.d)}</b><em>كجم</em></div><div class="kpi hl"><span>الحصة المستحقة 22%</span><b>${f(due)}</b><em>كجم</em></div><div class="kpi"><span>الحصة المفصولة في الصهر</span><b>${f(made)}</b><em>كجم</em></div><div class="kpi"><span>وضع الامتثال</span><b style="font-size:16px;font-family:var(--f-body)"><span class="chip ${cs.length?'warn':'ok'}">${cs.length?'حالة مفتوحة':'ممتثل'}</span></b><em>${cs.length?esc(cs[0].action):'لا ملاحظات'}</em></div></div>
+ ${mbPanel(p,'company')}`};
+BIND.mycompany=()=>bindMB("P1","رُفع الإنتاج وأُرسل للمطابقة");
+
+VIEWS.goldroom=()=>{
+ const pl=ROLE==='company'?S.plants.filter(p=>p.id==="P1"):S.plants;
+ const bars=S.bars.filter(b=>pl.some(p=>p.id===b.pid));
+ return `<div><h2>${ROLE==='company'?'سبائكي':'غرف الصهر والسبائك'}</h2><p class="lead">كل صهر يتم بحضور مراقب. المنصة تعطي السبيكة رقمًا تسلسليًا، وتفصل حصة الدولة 22% في سبيكة مستقلة، وتصدر تصريح الترحيل.</p></div>
+ ${ROLE!=='company'?`<div class="panel"><h3>تسجيل صهر جديد (شهادة المراقب)</h3><form id="meltForm"><div class="fields">
+  <label for="mPl">المصنع<select id="mPl">${S.plants.map(p=>`<option value="${p.id}">${p.n}</option>`).join('')}</select></label>
+  <label for="mKg">وزن الصهر الكلي (كجم)<input id="mKg" type="number" step="0.1" value="20"></label>
+  <label for="mPu">النقاوة %<input id="mPu" type="number" step="0.1" value="90"></label>
+  <label for="mCam">كاميرا غرفة الصهر<select id="mCam"><option value="1">متصلة · التسجيل يعمل</option><option value="0">غير متصلة</option></select></label>
+ </div><button class="btn" type="submit">تسجيل وفصل الحصة 22%</button></form></div>`:''}
+ <div class="panel"><div class="tbl"><table><thead><tr><th>الرقم التسلسلي</th><th>المصنع</th><th>النوع</th><th>الوزن (كجم)</th><th>النقاوة</th><th>التاريخ</th><th>الوضع</th><th></th></tr></thead><tbody>
+ ${bars.map(b=>`<tr><td class="num">${b.sn}</td><td>${S.plants.find(p=>p.id===b.pid).n}</td><td>${b.share?'<span class="chip or">حصة الدولة</span>':'<span class="chip gray">الشركة</span>'}</td><td class="num">${f(b.kg)}</td><td class="num">${f(b.pur)}%</td><td class="num">${b.date}</td><td><span class="chip ${chipFor(b.status)}">${b.status}</span></td><td>${b.status==='في المصنع'&&b.share&&ROLE!=='company'?`<button class="btn ghost sm" data-ship="${b.sn}">إصدار تصريح ترحيل</button>`:''}</td></tr>`).join('')}
+ </tbody></table></div></div>`;
+};
+BIND.goldroom=()=>{
+ const fm=$('#meltForm');if(fm)fm.onsubmit=e=>{e.preventDefault();const pid=$('#mPl').value,kg=+$('#mKg').value||0,pu=+$('#mPu').value||0;
+  if($('#mCam').value==='0'){addCase("cam-"+Date.now(),`صهر بدون تسجيل كاميرا في ${S.plants.find(p=>p.id===pid).n}`,"bad",S.plants.find(p=>p.id===pid).n,"الكاميرا غير متصلة أثناء الصهر","مراجعة فورية وإعادة الوزن بحضور مشرف")}
+  const sn=`SD-${pid}-2610-${String(++S.seq.bar).padStart(3,'0')}`,share=+(kg*RATE).toFixed(2);
+  S.bars.unshift({sn:sn+"S",pid,kg:share,pur:pu,share:true,status:"في المصنع",date:today()});
+  S.bars.unshift({sn,pid,kg:+(kg-share).toFixed(2),pur:pu,share:false,status:"في المصنع",date:today()});
+  log(`صهر ${sn}: ${f(kg)} كجم، فصل حصة ${f(share)} كجم`);if(S.offline)S.queue.push('صهر '+sn);save();toast(`سُجّلت السبيكة ${sn} وفُصلت حصة ${f(share)} كجم`);render()};
+ document.querySelectorAll('[data-ship]').forEach(b=>b.onclick=()=>{const sn=b.dataset.ship,base=sn.replace(/S$/,'');const bs=S.bars.filter(x=>x.sn===sn||x.sn===base);bs.forEach(x=>x.status="مُرحَّل");
+  const pl=S.plants.find(p=>p.id===bs[0].pid);const id="TP-"+(S.seq.tp++);S.permits.unshift({id,what:`سبائك ${base} + حصة الدولة`,from:pl.n,to:"البنك المركزي · بورتسودان",kg:bs.reduce((a,x)=>a+x.kg,0),status:"في الطريق",bars:bs.map(x=>x.sn)});
+  log(`إصدار تصريح ${id}`);save();toast(`صدر تصريح الترحيل ${id}`);render()});
+};
+
+VIEWS.karta=()=>`<div><h2>مصانع معالجة الكرتة</h2><p class="lead">كل شحنة كرتة يجب أن ترتبط بموقع أهلي مرخّص. المنصة تفحص المصدر والعيار والزئبق قبل دخول الشحنة المصنع.</p></div>
+ <div class="panel"><div class="ph"><h3>الشحنات الواردة · مصنع الشهيناب للكرتة</h3><button class="btn ghost sm" data-act="newkarta">شحنة جديدة</button></div><div class="tbl"><table><thead><tr><th>الشحنة</th><th>المصدر</th><th>الترخيص</th><th>الوزن (طن)</th><th>العيار (غ/طن)</th><th>الزئبق</th><th>فحص المنصة</th><th>القرار</th></tr></thead><tbody>
+ ${S.karta.map(k=>{const fl=kflag(k);return `<tr><td class="num">${k.id}</td><td>${esc(k.src)}</td><td class="num">${k.lic||'—'}</td><td class="num">${f(k.t,0)}</td><td class="num">${f(k.g)}</td><td>${k.hg}</td><td>${fl?`<span class="chip bad">${fl}</span>`:'<span class="chip ok">سليمة</span>'}</td><td>${k.v?`<span class="chip ${k.v==='مقبولة'?'ok':'bad'}">${k.v}</span>`:`<div class="row"><button class="btn sm" data-kv="${k.id}|مقبولة">قبول</button><button class="btn ghost sm" data-kv="${k.id}|موقوفة">إيقاف</button></div>`}</td></tr>`}).join('')}
+ </tbody></table></div></div>`;
+BIND.karta=()=>{document.querySelectorAll('[data-kv]').forEach(b=>b.onclick=()=>{const[id,v]=b.dataset.kv.split('|');const k=S.karta.find(x=>x.id===id);
+ if(v==='مقبولة'&&kflag(k)){modal(`<h3>تأكيد قبول شحنة مشبوهة</h3><p>المنصة رصدت: <b style="color:var(--bad)">${kflag(k)}</b>. القبول سيُسجَّل في سجل التدقيق باسمك.</p><div class="row"><button class="btn danger" id="cfm">قبول رغم التحذير</button><button class="btn ghost" data-act="modalclose">إلغاء</button></div>`);$('#cfm').onclick=()=>{k.v=v;log(`قبول شحنة ${id} رغم التحذير`);save();closeModal();render()};return}
+ k.v=v;if(v==='مقبولة'){const p=S.plants.find(x=>x.id===k.to);p.t+=k.t}log(`${v==='مقبولة'?'قبول':'إيقاف'} شحنة الكرتة ${id}`);const c=S.cases.find(c=>c.key==="karta-"+id&&c.status!=="مغلقة");if(c&&v==='موقوفة'){c.status="قيد المعالجة";c.notes.push(now()+' — أُوقفت الشحنة')}save();toast(`الشحنة ${id}: ${v}`);render()})};
+
+VIEWS.artisanal=()=>`<div><h2>الأحواض والأسواق</h2><p class="lead">المتوقَّع من الأحواض يُحسب من أطنان التعبئات أو من السيانيد المصروف (${CY_PER_T} كجم/طن)، أيهما أكبر، ويُقارن بما بيع في الأسواق المرخّصة.</p></div>
+ <div class="chain"><span class="on">البئر</span><i>←</i><span class="on">الطاحونة</span><i>←</i><span class="cur">الأحواض</span><i>←</i><span class="cur">السوق</span><i>←</i><span>الترحيل</span><i>←</i><span>البنك المركزي</span></div>
+ <div class="panel"><h3>سجل الأحواض</h3><div class="tbl"><table><thead><tr><th>الموقع</th><th>الولاية</th><th>التعبئات</th><th>الخام (طن)</th><th>السيانيد (كجم)</th><th>المتوقَّع (غ)</th><th>المُباع (غ)</th><th>الحالة</th></tr></thead><tbody>
+ ${S.vats.map(v=>{const[k,t]=vstat(v);return `<tr><td>${v.n}</td><td>${v.st}</td><td class="num">${v.fills}</td><td class="num">${f(v.t,0)}</td><td class="num">${f(v.cy,0)}</td><td class="num">${f(vExp(v),0)}</td><td class="num">${f(v.sold,0)}</td><td><span class="chip ${k}">${t}</span></td></tr>`}).join('')}
+ </tbody></table></div></div>
+ <div class="cols2"><div class="panel"><h3>تسجيل تعبئة حوض</h3>${fillForm()}</div><div class="panel"><h3>آخر عمليات البيع</h3>${salesTable(6)}</div></div>`;
+function fillForm(){return `<form id="fillForm"><div class="fields"><label for="fV">الموقع<select id="fV">${S.vats.map(v=>`<option value="${v.id}">${v.n}</option>`).join('')}</select></label><label for="fT">الخام (طن)<input id="fT" type="number" value="40" step="5"></label><label for="fC">السيانيد المصروف (كجم)<input id="fC" type="number" value="60" step="5"></label></div><button class="btn" type="submit">تسجيل التعبئة وصرف السيانيد</button></form>`}
+function bindFill(){const fm=$('#fillForm');if(fm)fm.onsubmit=e=>{e.preventDefault();const v=S.vats.find(x=>x.id===$('#fV').value);v.fills++;v.t+=+$('#fT').value||0;v.cy+=+$('#fC').value||0;log(`تعبئة حوض في ${v.n}`);if(S.offline)S.queue.push('تعبئة '+v.n);scan();toast('سُجّلت التعبئة · ارتفع المتوقَّع لـ '+v.n);render()}}
+function salesTable(n){const l=S.sales.slice(0,n);return `<div class="tbl"><table style="min-width:420px"><thead><tr><th>الإيصال</th><th>المُعدِّن</th><th>الوزن (غ)</th><th>النقاوة</th><th>المشتري</th></tr></thead><tbody>${l.map(s=>`<tr><td class="num">${s.rc}</td><td>${esc(S.miners.find(m=>m.id===s.mid)?.n||s.mid)}</td><td class="num">${f(s.g,0)}</td><td class="num">${f(s.pur,0)}%</td><td>${esc(s.buyer)}</td></tr>`).join('')||'<tr><td colspan="5"><div class="empty">لا عمليات</div></td></tr>'}</tbody></table></div>`}
+BIND.artisanal=bindFill;
+
+VIEWS.market=()=>{const gm=S.sales.reduce((a,s)=>a+s.g*s.pur/100,0);
+ return `<div><h2>سوق العبيدية · البيع والإيصالات</h2><p class="lead">لا يتم البيع إلا لمُعدِّن ترخيصه ساري. الإيصال الرقمي يربط الذهب بموقع الأحواض ويحسب الرسوم.</p></div>
+ <div class="grid3"><div class="kpi"><span>عمليات البيع المسجّلة</span><b>${S.sales.length}</b><em>إيصال</em></div><div class="kpi hl"><span>ذهب صافٍ عبر السوق</span><b>${f(gm/1000,2)}</b><em>كجم</em></div><div class="kpi"><span>مُعدِّنون مرخّصون</span><b>${S.miners.filter(m=>m.status==='ساري').length}</b><em>في السجل الوطني</em></div></div>
+ <div class="cols"><div class="panel"><h3>عملية بيع جديدة</h3><form id="saleForm"><div class="fields">
+  <label for="sLic">رقم ترخيص المُعدِّن<input id="sLic" value="ART-NR-0915" list="licList"><datalist id="licList">${S.miners.map(m=>`<option value="${m.id}">${esc(m.n)}</option>`).join('')}</datalist></label>
+  <label for="sG">الوزن (غرام)<input id="sG" type="number" value="350" step="10"></label>
+  <label for="sP">النقاوة %<input id="sP" type="number" value="88" step="1"></label>
+  <label for="sB">المشتري المرخّص<select id="sB"><option>مؤسسة النيل للذهب</option><option>دار الشرق للذهب</option></select></label>
+ </div><div id="licCheck"></div><button class="btn" type="submit">إصدار إيصال رقمي</button></form></div>
+ <div class="panel"><div class="ph"><h3>الإيصالات</h3><button class="btn ghost sm" data-act="batch">ترحيل مجمّع للبنك</button></div>${salesTable(8)}</div></div>`};
+BIND.market=()=>{const chk=()=>{const m=S.miners.find(x=>x.id===$('#sLic').value.trim());$('#licCheck').innerHTML=m?`<span class="chip ${m.status==='ساري'?'ok':'bad'}">${esc(m.n)} · ${m.status} · ${S.vats.find(v=>v.id===m.site)?.n||''}</span>`:'<span class="chip bad">الترخيص غير موجود في السجل — لا يمكن البيع</span>'};$('#sLic').oninput=chk;chk();
+ $('#saleForm').onsubmit=e=>{e.preventDefault();const m=S.miners.find(x=>x.id===$('#sLic').value.trim());if(!m||m.status!=='ساري'){toast('لا يمكن البيع: الترخيص غير ساري');return}
+  const g=+$('#sG').value||0,pu=+$('#sP').value||0;const rc="RC-"+(S.seq.rc++);S.sales.unshift({rc,mid:m.id,vid:m.site,g,pur:pu,buyer:$('#sB').value,date:today(),fee:true});const v=S.vats.find(x=>x.id===m.site);if(v)v.sold+=g*pu/100;
+  log(`إيصال ${rc}: ${g} غ من ${m.n}`);scan();toast(`صدر الإيصال ${rc}`);render()}};
+
+VIEWS.registry=()=>{const t=SEL.reg||"miners";
+ return `<div><h2>السجل الوطني</h2><p class="lead">هوية رقمية لكل مُعدِّن وموقع. التراخيص الصادرة هنا هي ما تتحقق منه الأسواق ومصانع الكرتة.</p></div>
+ <div class="row"><button class="btn ${t==='miners'?'':'ghost'} sm" data-reg="miners">المُعدِّنون</button><button class="btn ${t==='sites'?'':'ghost'} sm" data-reg="sites">المواقع</button><button class="btn ${t==='plants'?'':'ghost'} sm" data-reg="plants">المصانع</button></div>
+ ${t==='miners'?`<div class="cols"><div class="panel"><div class="ph"><h3>المُعدِّنون المرخّصون</h3><input id="q" placeholder="بحث بالاسم أو الرقم" style="max-width:220px"></div><div class="tbl"><table style="min-width:440px"><thead><tr><th>الترخيص</th><th>الاسم</th><th>الولاية</th><th>الموقع</th><th>الوضع</th><th></th></tr></thead><tbody id="mRows"></tbody></table></div></div>
+  <div class="panel"><h3>إصدار ترخيص جديد</h3><form id="licForm"><div class="fields"><label for="lN">الاسم أو المجموعة<input id="lN" value="محمد آدم"></label><label for="lS">الولاية<select id="lS">${STATES.map(s=>`<option>${s}</option>`).join('')}</select></label><label for="lV">موقع الأحواض<select id="lV">${S.vats.map(v=>`<option value="${v.id}">${v.n}</option>`).join('')}</select></label></div><button class="btn" type="submit">إصدار ترخيص رقمي</button></form></div></div>`
+ :t==='sites'?`<div class="panel"><div class="tbl"><table><thead><tr><th>النوع</th><th>الموقع</th><th>الترخيص</th><th>ملاحظة</th></tr></thead><tbody>${S.sites.map(s=>`<tr><td>${s.type}</td><td>${esc(s.n)}</td><td><span class="chip ${s.lic?'ok':'or'}">${s.lic?'مرخّص':'غير مرخّص'}</span></td><td class="small muted">${esc(s.note||'')}</td></tr>`).join('')}</tbody></table></div></div>`
+ :`<div class="panel"><div class="tbl"><table><thead><tr><th>المصنع</th><th>الشركة</th><th>الولاية</th><th>الطريقة</th></tr></thead><tbody>${S.plants.map(p=>`<tr><td>${p.n}</td><td>${p.co}</td><td>${p.st}</td><td>${p.m}</td></tr>`).join('')}</tbody></table></div></div>`}`};
+BIND.registry=()=>{document.querySelectorAll('[data-reg]').forEach(b=>b.onclick=()=>{SEL.reg=b.dataset.reg;render()});
+ const draw=()=>{const q=($('#q')?.value||'').trim();const r=$('#mRows');if(!r)return;r.innerHTML=S.miners.filter(m=>!q||m.n.includes(q)||m.id.includes(q)).map(m=>`<tr><td class="num">${m.id}</td><td>${esc(m.n)}</td><td>${m.st}</td><td>${esc(S.vats.find(v=>v.id===m.site)?.n||'')}</td><td><span class="chip ${chipFor(m.status)}">${m.status}</span></td><td>${ROLE==='admin'?`<button class="btn ghost sm" data-tog="${m.id}">${m.status==='ساري'?'إيقاف':'تفعيل'}</button>`:''}</td></tr>`).join('');
+  r.querySelectorAll('[data-tog]').forEach(b=>b.onclick=()=>{const m=S.miners.find(x=>x.id===b.dataset.tog);m.status=m.status==='ساري'?'موقوف':'ساري';log(`${m.status==='ساري'?'تفعيل':'إيقاف'} ترخيص ${m.id}`);save();draw()})};
+ if($('#q'))$('#q').oninput=draw;draw();
+ const fm=$('#licForm');if(fm)fm.onsubmit=e=>{e.preventDefault();const st=$('#lS').value;const code={"نهر النيل":"NR","الشمالية":"SH","البحر الأحمر":"RS","القضارف":"GD","كسلا":"KS"}[st];const id=`ART-${code}-0${++S.seq.lic}`;S.miners.unshift({id,n:$('#lN').value||'—',st,site:$('#lV').value,status:"ساري"});log(`إصدار ترخيص ${id}`);if(S.offline)S.queue.push('ترخيص '+id);save();toast('صدر الترخيص '+id);draw()}};
+
+VIEWS.permits=()=>`<div><h2>تصاريح الترحيل</h2><p class="lead">لا يتحرك الذهب إلا بتصريح إلكتروني مرتبط بكمية مسجّلة. البنك المركزي يؤكد الاستلام فيُغلق التصريح.</p></div>
+ <div class="panel"><div class="tbl"><table><thead><tr><th>التصريح</th><th>المحتوى</th><th>من</th><th>إلى</th><th>الوزن (كجم)</th><th>الوضع</th></tr></thead><tbody>
+ ${S.permits.map(p=>`<tr><td class="num">${p.id}</td><td>${esc(p.what)}</td><td>${esc(p.from)}</td><td>${esc(p.to)}</td><td class="num">${f(p.kg,2)}</td><td><span class="chip ${chipFor(p.status)}">${p.status}</span></td></tr>`).join('')}
+ </tbody></table></div></div>`;
+
+VIEWS.bank=()=>{const inc=S.permits.filter(p=>p.status==="في الطريق"),done=S.permits.filter(p=>p.status==="مستلم");
+ return `<div><h2>البنك المركزي · الشحنات الواردة</h2><p class="lead">زن الشحنة عند الاستلام. المنصة تطابق الوزن مع التصريح والسبائك المسجّلة، وتُثبت استلام حصة الدولة.</p></div>
+ <div class="grid3"><div class="kpi"><span>شحنات في الطريق</span><b>${inc.length}</b><em>${f(inc.reduce((a,p)=>a+p.kg,0),2)} كجم</em></div><div class="kpi hl"><span>حصة الدولة المستلمة</span><b>${f(shareIn(),2)}</b><em>كجم من ${f(shareDue(),2)} مستحق</em></div><div class="kpi"><span>شحنات مستلمة</span><b>${done.length}</b><em>${f(done.reduce((a,p)=>a+p.kg,0),2)} كجم</em></div></div>
+ <div class="panel"><h3>بانتظار الاستلام</h3>${inc.length?inc.map(p=>`<div class="task" style="margin-bottom:8px"><div class="row" style="justify-content:space-between"><b class="num">${p.id}</b><span class="chip info">${p.status}</span></div><div>${esc(p.what)}</div><div class="small muted">${esc(p.from)} · الوزن في التصريح: <span class="num">${f(p.kg,2)}</span> كجم</div>
+  <form class="row" data-recv="${p.id}"><label style="flex:1;min-width:160px">الوزن عند الاستلام (كجم)<input type="number" step="0.01" value="${p.kg.toFixed(2)}"></label><button class="btn" type="submit" style="align-self:end">تأكيد الاستلام</button></form></div>`).join(''):'<div class="empty">لا شحنات في الطريق. أصدر تصريحًا من غرفة الصهر أو السوق.</div>'}</div>`};
+BIND.bank=()=>{document.querySelectorAll('[data-recv]').forEach(fm=>fm.onsubmit=e=>{e.preventDefault();const p=S.permits.find(x=>x.id===fm.dataset.recv);const w=+fm.querySelector('input').value||0;const diff=p.kg-w;
+ p.status="مستلم";p.recvKg=w;(p.bars||[]).forEach(sn=>{const b=S.bars.find(x=>x.sn===sn);if(b)b.status="مستلم في البنك"});
+ if(Math.abs(diff)>0.05)addCase("recv-"+p.id,`فرق وزن عند استلام ${p.id}: ${f(diff,2)} كجم`,"bad",p.from,"الوزن المستلم لا يطابق التصريح","تحقيق في مسار الترحيل والجهة الناقلة");
+ log(`استلام ${p.id} بوزن ${f(w,2)} كجم`);save();toast(Math.abs(diff)>0.05?'استُلمت الشحنة مع فتح حالة فرق وزن':'استُلمت الشحنة ومطابقة');render()})};
+
+const DOCF=[["رقم الإيصال","4418",98],["التاريخ","2026-10-18",97],["اسم البائع","عثمان الطيب",94],["رقم الترخيص","ART-NR-0912",99],["الوزن (غرام)","340",96],["النقاوة %","87.5",71],["المشتري","مؤسسة النيل للذهب",92]];
+VIEWS.docs=()=>`<div><h2>ذكاء المستندات</h2><p class="lead">صوّر إيصالًا ورقيًا أو استخدم العيّنة. الحقول منخفضة الثقة تظهر للتدقيق قبل الاعتماد. (الاستخراج في هذه النسخة محاكاة لطريقة عمل المحرك.)</p></div>
+ <div class="cols"><div class="panel" style="display:grid;gap:12px">
+  <div id="docImg"><div class="receipt" aria-label="إيصال عيّنة"><h4>سوق العبيدية · إيصال بيع ذهب</h4><div><span>رقم الإيصال</span><span class="hw">٤٤١٨</span></div><div><span>التاريخ</span><span class="hw">١٨ / ١٠ / ٢٠٢٦</span></div><div><span>اسم البائع</span><span class="hw">عثمان الطيب</span></div><div><span>رقم الترخيص</span><span class="hw">ART-NR-0912</span></div><div><span>الوزن</span><span class="hw">٣٤٠ جرام</span></div><div><span>العيار</span><span class="hw">٢١ تقريبا</span></div><div><span>المشتري</span><span class="hw">مؤسسة النيل للذهب</span></div></div></div>
+  <label for="docFile">أو ارفع صورة مستند<input id="docFile" type="file" accept="image/*"></label>
+  <button class="btn" id="readBtn">اقرأ المستند</button></div>
+  <div class="panel"><h3>البيانات المستخرجة</h3><div class="ext" id="ext"><div class="empty">اضغط «اقرأ المستند»</div></div></div></div>`;
+BIND.docs=()=>{$('#docFile').onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();r.onload=()=>{$('#docImg').innerHTML=`<img class="upimg" src="${r.result}" alt="المستند المرفوع">`};r.readAsDataURL(fl)};
+ $('#readBtn').onclick=()=>{const ext=$('#ext');ext.innerHTML='';DOCF.forEach((d,i)=>setTimeout(()=>{const low=d[2]<85;const el=document.createElement('div');el.className='f'+(low?' low':'');el.innerHTML=`<div><span class="small muted">${d[0]}</span><input data-fi="${i}" value="${esc(d[1])}" aria-label="${d[0]}"></div><span class="num small">${d[2]}%</span><span class="chip ${low?'warn':'ok'}">${low?'تدقيق':'تلقائي'}</span>`;ext.appendChild(el);
+  if(i===DOCF.length-1){const w=document.createElement('div');w.style.cssText='display:grid;gap:8px;margin-top:4px';const m=S.miners.find(x=>x.id==="ART-NR-0912");w.innerHTML=`<div class="small muted">حقل النقاوة كُتب «٢١ تقريبا» بخط اليد، فحُوِّل إلى 87.5% وأُحيل للتدقيق. رقم الترخيص طوبق مع السجل: <span class="chip ${m&&m.status==='ساري'?'ok':'bad'}">${m?esc(m.n)+' · '+m.status:'غير موجود'}</span></div><button class="btn" id="approve">اعتماد وإضافة للسجل</button>`;ext.appendChild(w);
+   $('#approve').onclick=()=>{const v=k=>document.querySelector(`[data-fi="${k}"]`).value;const mid=v(3).trim(),g=+v(4)||0,pu=+v(5)||0;const mm=S.miners.find(x=>x.id===mid);if(!mm){toast('رقم الترخيص غير موجود');return}const rc="RC-"+(S.seq.rc++);S.sales.unshift({rc,mid,vid:mm.site,g,pur:pu,buyer:v(6),date:v(1),fee:true,fromDoc:true});const vt=S.vats.find(x=>x.id===mm.site);if(vt)vt.sold+=g*pu/100;log(`اعتماد إيصال ورقي ${v(0)} كـ ${rc}`);if(S.offline)S.queue.push('إيصال '+rc);scan();toast(`اعتُمد الإيصال وسُجّل برقم ${rc}`);$('#approve').disabled=true}}},i*220))}};
+
+const SATP={v:1};
+VIEWS.sat=()=>`<div><h2>الرصد بالأقمار الصناعية</h2><p class="lead">مقارنة صورتين للمنطقة نفسها. المواقع الجديدة غير المرخّصة تتحول إلى حالات ومهام ميدانية تلقائيًا.</p></div>
+ <div class="cols"><div class="panel" style="display:grid;gap:10px"><div class="mapbox"><svg id="map" viewBox="0 0 600 380" role="img" aria-label="خريطة الرصد"></svg></div>
+  <label for="slider">الصورة: <b id="period"></b><input id="slider" type="range" min="0" max="1" step="1" value="${SATP.v}"></label>
+  <div class="legend"><span><i style="background:var(--ok)"></i>مرخّص</span><span><i style="background:var(--or)"></i>جديد غير مرخّص</span><span><i style="background:var(--bad)"></i>خطر سلامة</span><span><i style="background:#8a8a92"></i>كومة رشح</span></div></div>
+  <div class="panel"><h3>تفاصيل الموقع</h3><div id="siteInfo" class="muted">اضغط على أي نقطة.</div></div></div>`;
+BIND.sat=()=>{const draw=()=>{SATP.v=+$('#slider').value;$('#period').textContent=SATP.v?'14 أكتوبر 2026':'12 سبتمبر 2026';
+ let s=`<rect width="600" height="380" fill="#141417"/><path d="M0 210 C120 190 180 240 300 220 S480 180 600 205" stroke="#26303a" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M0 210 C120 190 180 240 300 220 S480 180 600 205" stroke="#2f3c49" stroke-width="3" fill="none"/>`;
+ for(let i=0;i<5;i++)s+=`<ellipse cx="440" cy="120" rx="${30+i*22}" ry="${18+i*14}" fill="none" stroke="#222226"/>`;
+ s+=`<text x="584" y="28" fill="#6b6b73" font-size="12" text-anchor="end">ولاية نهر النيل · قطاع افتراضي</text><text x="300" y="240" fill="#4b5966" font-size="11" text-anchor="middle">وادٍ موسمي</text>`;
+ S.sites.forEach((st,i)=>{if(st.p>SATP.v)return;const c=st.risk?'var(--bad)':st.type==='كومة رشح'?'#8a8a92':st.lic?'var(--ok)':'var(--or)';const r=st.type==='كومة رشح'?(SATP.v?20:16):9;
+  s+=`<g data-s="${i}" tabindex="0" style="cursor:pointer">${!st.lic?`<circle cx="${st.x}" cy="${st.y}" r="18" fill="none" stroke="var(--or)" stroke-width="2" class="pulse"/>`:''}<circle cx="${st.x}" cy="${st.y}" r="${r}" fill="${c}" ${st.type==='كومة رشح'?'fill-opacity=".55"':''}/></g>`});
+ s+=`<rect x="16" y="344" width="70" height="4" fill="#6b6b73"/><text x="16" y="338" fill="#8a8a92" font-size="11" font-family="IBM Plex Mono">2 km</text>`;
+ $('#map').innerHTML=s;
+ document.querySelectorAll('#map [data-s]').forEach(g=>{const go=()=>{const st=S.sites[+g.dataset.s];const cs=S.cases.find(c=>c.key==="site-"+st.id);
+  $('#siteInfo').innerHTML=`<div style="display:grid;gap:8px;color:var(--fg)"><b style="font-size:16px">${esc(st.n)}</b><span class="chip ${st.risk?'bad':st.lic?'ok':'or'}" style="justify-self:start">${st.risk?'خطر سلامة':st.lic?'مرخّص':'رُصد حديثًا · غير مرخّص'}</span><span>${st.type}${st.note?' · '+esc(st.note):''}</span>${cs?`<span class="small muted">مرتبط بالحالة ${cs.id} · ${cs.status}${cs.assignee?' · '+esc(cs.assignee):''}</span>`:''}
+  ${!st.lic&&ROLE==='admin'?`<button class="btn" id="disp">إسناد مهمة تسجيل للمراقب الميداني</button>`:''}</div>`;
+  const d=$('#disp');if(d)d.onclick=()=>{scan();const c=S.cases.find(c=>c.key==="site-"+st.id&&c.status!=="مغلقة");if(c){c.assignee="أ. خالد عمر";c.status="قيد المعالجة"}log(`إسناد تسجيل ${st.n} للمراقب`);save();toast('أُسندت المهمة · ستظهر في تطبيق المراقب');go()}};g.onclick=go;g.onkeydown=e=>{if(e.key==='Enter')go()}})};
+ $('#slider').oninput=draw;draw()};
+
+function myTasks(){return S.cases.filter(c=>c.assignee==="أ. خالد عمر"&&c.status!=="مغلقة")}
+VIEWS.field=()=>{const t=myTasks();
+ return `<div class="phone">
+  <div class="row" style="justify-content:space-between"><b>مرحبًا خالد</b><span class="small muted">نهر النيل</span></div>
+  <div class="sync ${S.offline?'warn':'ok'}"><span>${S.offline?`وضع بلا إنترنت · ${S.queue.length} عملية بانتظار المزامنة`:'متصل · كل البيانات متزامنة'}</span><button class="btn ghost sm" data-act="offline">${S.offline?'مزامنة الآن':'محاكاة انقطاع'}</button></div>
+  <h3 style="margin:0">مهامي (${t.length})</h3>
+  ${t.length?t.map(c=>`<div class="task"><div class="row" style="justify-content:space-between"><b class="small num">${c.id}</b><span class="chip ${c.level}">${lvl[c.level]}</span></div><div>${esc(c.title)}</div><div class="small muted">${esc(c.action)}</div><button class="btn sm" data-fieldcase="${c.id}" style="justify-self:start">${c.key.startsWith('site-')?'زيارة وتسجيل الموقع':'تسجيل نتيجة الزيارة'}</button></div>`).join(''):'<div class="empty">لا مهام مُسنَدة. من حساب الإدارة: افتح حالة وأسندها إلى «أ. خالد عمر»، أو أسند موقعًا من الرصد الفضائي.</div>'}
+  <h3 style="margin:0">تسجيل سريع</h3>
+  <div class="row"><button class="btn ghost sm" data-go="goldroom">شهادة صهر</button><button class="btn ghost sm" data-go="docs">مسح مستند</button><button class="btn ghost sm" data-go="registry">ترخيص مُعدِّن</button></div>
+  <div class="panel" style="padding:10px"><h3>تعبئة حوض</h3>${fillForm()}</div>
+ </div>`};
+BIND.field=()=>{bindFill();document.querySelectorAll('[data-fieldcase]').forEach(b=>b.onclick=()=>{const c=S.cases.find(x=>x.id===b.dataset.fieldcase);
+ if(c.key.startsWith('site-')){const st=S.sites.find(s=>"site-"+s.id===c.key);modal(`<h3>تسجيل ${esc(st.n)}</h3><form id="vf"><div class="fields"><label for="vfN">اسم المالك / المجموعة<input id="vfN" value="مجموعة الشهيناب الشمالية"></label><label for="vfC">عدد الأحواض<input id="vfC" type="number" value="4"></label><label for="vfS">تقييم السلامة<select id="vfS"><option>مقبول</option><option>يحتاج تحسين</option></select></label></div><div class="row"><button class="btn" type="submit">تسجيل وترخيص الموقع</button><button class="btn ghost" type="button" data-act="modalclose">إلغاء</button></div></form>`);
+  $('#vf').onsubmit=e=>{e.preventDefault();st.lic=true;st.visited=true;st.n=$('#vfN').value+' · أحواض';const vid="V"+(S.vats.length+1);S.vats.push({id:vid,n:st.n,st:"نهر النيل",fills:0,t:0,cy:0,sold:0});const id=`ART-NR-0${++S.seq.lic}`;S.miners.unshift({id,n:$('#vfN').value,st:"نهر النيل",site:vid,status:"ساري"});c.status="مغلقة";c.notes.push(now()+` — زيارة ميدانية: سُجّل الموقع وصدر الترخيص ${id}`);log(`تسجيل موقع مرصود وترخيص ${id}`);if(S.offline)S.queue.push('ترخيص '+id);save();closeModal();toast('سُجّل الموقع وصدر الترخيص '+id);render()}}
+ else openCase(c.id)})};
+
+VIEWS.reports=()=>{const rows=STATES.map(st=>{const pl=S.plants.filter(p=>p.st===st),vt=S.vats.filter(v=>v.st===st);const pd=pl.reduce((a,p)=>a+p.d,0),pe=pl.reduce((a,p)=>a+exp(p),0),sh=pd*RATE,shIn=S.bars.filter(b=>b.share&&b.status==="مستلم في البنك"&&pl.some(p=>p.id===b.pid)).reduce((a,b)=>a+b.kg,0),as=vt.reduce((a,v)=>a+v.sold,0)/1000,ae=vt.reduce((a,v)=>a+vExp(v),0)/1000;return[st,pd,pe,sh,shIn,as,ae]});
+ const csv=["الولاية,إنتاج الشركات المعلن كجم,المتوقع كجم,الحصة المستحقة كجم,الحصة المستلمة كجم,أهلي مباع كجم,أهلي متوقع كجم",...rows.map(r=>[r[0],...r.slice(1).map(x=>x.toFixed(2))].join(','))].join('\n');SEL.csv=csv;
+ return `<div><h2>${ROLE==='bank'?'المطابقة':'التقارير'}</h2><p class="lead">تقرير الشهر حسب الولاية. يمكن نسخه كـ CSV وفتحه في Excel.</p></div>
+ <div class="panel"><div class="tbl"><table><thead><tr><th>الولاية</th><th>الشركات المُعلن</th><th>المتوقَّع</th><th>الحصة المستحقة</th><th>الحصة المستلمة</th><th>نسبة التحصيل</th><th>أهلي مُباع</th><th>أهلي متوقَّع</th></tr></thead><tbody>
+ ${rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${f(r[1])}</td><td class="num">${f(r[2])}</td><td class="num">${f(r[3],2)}</td><td class="num">${f(r[4],2)}</td><td>${r[3]?`<span class="chip ${r[4]/r[3]>.9?'ok':r[4]/r[3]>.5?'warn':'bad'}">${f(r[4]/r[3]*100,0)}%</span>`:'—'}</td><td class="num">${f(r[5],2)}</td><td class="num">${f(r[6],2)}</td></tr>`).join('')}
+ </tbody></table></div><div class="row" style="margin-top:10px"><button class="btn ghost sm" data-act="copycsv">نسخ CSV</button><button class="btn ghost sm" data-act="dlcsv">تنزيل CSV</button></div><pre class="csv" id="csvBox" hidden></pre></div>`};
+
+VIEWS.audit=()=>`<div><h2>سجل التدقيق</h2><p class="lead">كل عملية تُسجّل باسم الدور والوقت ولا يمكن تعديلها.</p></div>
+ <div class="panel"><div class="tbl"><table><thead><tr><th>الوقت</th><th>الدور</th><th>العملية</th></tr></thead><tbody>${S.log.map(l=>`<tr><td class="num">${l.t}</td><td>${esc(l.r)}</td><td>${esc(l.a)}</td></tr>`).join('')||'<tr><td colspan="3"><div class="empty">لم تُسجَّل عمليات بعد. جرّب أي إجراء في الأدوار الأخرى.</div></td></tr>'}</tbody></table></div></div>`;
+
+/* ================= modal ================= */
+function modal(html){$('#modalRoot').innerHTML=`<div class="modalbg" id="mbg"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;$('#mbg').onclick=e=>{if(e.target.id==='mbg')closeModal()};setTimeout(()=>$('.modal input,.modal select,.modal button')?.focus(),30)}
+function closeModal(){$('#modalRoot').innerHTML=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ================= global actions ================= */
+document.addEventListener('click',e=>{
+ const r=e.target.closest('[data-role]');if(r){ROLE=r.dataset.role;VIEW=null;try{sessionStorage.setItem('tibr-role',ROLE)}catch(_){}log('تسجيل دخول');render();return}
+ const g=e.target.closest('[data-go]');if(g){VIEW=g.dataset.go;closeModal();render();window.scrollTo({top:0});return}
+ const c=e.target.closest('[data-case]');if(c){openCase(c.dataset.case);return}
+ const a=e.target.closest('[data-act]');if(!a)return;const k=a.dataset.act;
+ if(k==='logout'){ROLE=null;try{sessionStorage.removeItem('tibr-role')}catch(_){}render()}
+ if(k==='reset'){modal(`<h3>إعادة ضبط البيانات التجريبية؟</h3><p class="muted">ستُحذف كل العمليات التي أجريتها وتعود البيانات لحالتها الأولى.</p><div class="row"><button class="btn danger" id="doReset">إعادة الضبط</button><button class="btn ghost" data-act="modalclose">إلغاء</button></div>`);$('#doReset').onclick=()=>{S=seed();scan();save();closeModal();toast('أُعيد ضبط البيانات');render()}}
+ if(k==='modalclose')closeModal();
+ if(k==='rescan'){scan();toast('شُغّل محرك المطابقة');render()}
+ if(k==='offline'){if(S.offline){const n=S.queue.length;S.offline=false;S.queue=[];log(`مزامنة ${n} عملية`);toast(`تمت مزامنة ${n} عملية`)}else{S.offline=true;toast('وضع بلا إنترنت: العمليات تُحفظ على الجهاز')}save();render()}
+ if(k==='batch'){const pending=S.sales.filter(s=>!s.shipped);if(!pending.length){toast('لا إيصالات جديدة للترحيل');return}const kg=pending.reduce((a,s)=>a+s.g*s.pur/100,0)/1000;pending.forEach(s=>s.shipped=true);const id="TP-"+(S.seq.tp++);S.permits.unshift({id,what:`ذهب أهلي مجمّع (${pending.length} إيصال)`,from:"سوق العبيدية",to:"البنك المركزي · بورتسودان",kg:+kg.toFixed(3),status:"في الطريق",bars:[]});log(`ترحيل مجمّع ${id}`);save();toast(`صدر التصريح ${id} بوزن ${f(kg,3)} كجم`);render()}
+ if(k==='newkarta'){const id="KR-"+(S.seq.kr++);const src=S.vats[Math.floor(Math.random()*S.vats.length)];S.karta.unshift({id,src:src.n,lic:S.miners.find(m=>m.site===src.id)?.id||'',t:60+Math.round(Math.random()*90),g:+(1.4+Math.random()*1.2).toFixed(1),hg:"منخفض",to:"P6",v:null});log(`وصول شحنة كرتة ${id}`);save();render()}
+ if(k==='copycsv'){const box=$('#csvBox');box.hidden=false;box.textContent=SEL.csv;navigator.clipboard?.writeText(SEL.csv).then(()=>toast('نُسخ CSV'),()=>{const rg=document.createRange();rg.selectNodeContents(box);getSelection().removeAllRanges();getSelection().addRange(rg);toast('حدّد النص وانسخه')})}
+ if(k==='dlcsv'){try{const b=new Blob(["﻿"+SEL.csv],{type:'text/csv'});const u=URL.createObjectURL(b);const l=document.createElement('a');l.href=u;l.download='tibr-report.csv';document.body.appendChild(l);l.click();l.remove();toast('بدأ التنزيل')}catch(_){toast('التنزيل غير متاح هنا، استخدم النسخ')}}
+});
+
+scan();render();
+</script>
+
+</body>
+</html>
